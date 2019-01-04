@@ -1,0 +1,50 @@
+{
+  "name": "garage-manager-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "DEBUG=server,server:* nodemon index.js"
+  },
+  "engine": {
+    "node": "8.11.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rntvicente/garagem-manager.git"
+  },
+  "keywords": [
+    "nodejs",
+    "express"
+  ],
+  "author": "Renato Vicente",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rntvicente/garagem-manager/issues"
+  },
+  "homepage": "https://github.com/rntvicente/garagem-manager#readme",
+  "dependencies": {
+    "async": "^2.6.1",
+    "body-parser": "^1.18.3",
+    "chalk": "^2.4.1",
+    "compression": "^1.7.3",
+    "debug": "^4.1.1",
+    "express": "^4.16.4",
+    "nconf": "^0.10.0",
+    "node": "^10.13.0",
+    "nodemon": "^1.18.9",
+    "parser": "^0.1.4"
+  },
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": [
+      "node_modules/**/node_modules"
+    ],
+    "delay": "2500",
+    "env": {
+      "PORT": 4000,
+      "NODE_ENV": "development"
+    }
+  }
+}
