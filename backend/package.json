@@ -4,8 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "./node_modules/.bin/eslint ./**.js .",
+    "depcheck": "./node_modules/.bin/depcheck --ignores eslint-plugin-import",
+    "pretest": "npm run depcheck && npm run lint",
+    "mocha": "NODE_ENV=test ./node_modules/mocha/bin/mocha --recursive --ui tdd",
+    "coverage": "NODE_ENV=test istanbul cover --print both _mocha -- -R spec --recursive",
+    "test": "npm run lint && npm run coverage",
+    "posttest": "./node_modules/.bin/istanbul check-coverage --statements 80 --branches 50 --functions 80 --lines 80",
     "start": "DEBUG=server,server:* nodemon index.js"
   },
   "engine": {
@@ -26,16 +31,24 @@
   },
   "homepage": "https://github.com/rntvicente/garagem-manager#readme",
   "dependencies": {
-    "async": "^2.6.1",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
     "compression": "^1.7.3",
     "debug": "^4.1.1",
     "express": "^4.16.4",
+    "ip": "^1.1.5",
     "nconf": "^0.10.0",
-    "node": "^10.13.0",
-    "nodemon": "^1.18.9",
-    "parser": "^0.1.4"
+    "nodemon": "^1.18.9"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "depcheck": "^0.6.11",
+    "eslint": "^5.12.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "supertest": "^3.3.0"
   },
   "nodemonConfig": {
     "restartable": "rs",
@@ -47,10 +60,5 @@
       "PORT": 4000,
       "NODE_ENV": "development"
     }
-  },
-  "devDependencies": {
-    "eslint": "^5.12.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
   }
 }
