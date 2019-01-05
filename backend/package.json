@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint ./**.js .",
     "start": "DEBUG=server,server:* nodemon index.js"
   },
   "engine": {
@@ -46,5 +47,10 @@
       "PORT": 4000,
       "NODE_ENV": "development"
     }
+  },
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
   }
 }

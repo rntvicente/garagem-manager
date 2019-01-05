@@ -26,11 +26,11 @@ const server = (() => {
 
     serverProcess = app.listen(app.get('port'), () => {
       debug(chalk.yellow('------------------------------------------------------------------'));
-      debug(chalk.yellow(`${pkg.name} - Version: ${pkg.version}`));
+      debug(chalk.yellow(`${pkg.name} - Version: ${pkg.version}                             `));
       debug(chalk.yellow('------------------------------------------------------------------'));
-      debug(chalk.yellow(`ATTENTION, ${env} ENVIRONMENT!`));
+      debug(chalk.yellow(`ATTENTION, ${env} ENVIRONMENT!                                    `));
       debug(chalk.yellow('------------------------------------------------------------------'));
-      debug(chalk.yellow(`Express server listening on port: ${serverProcess.address().port}`));
+      debug(chalk.yellow(`Express server listening on port: ${serverProcess.address().port} `));
       debug(chalk.yellow('------------------------------------------------------------------'));
 
       return callback(null, app);
