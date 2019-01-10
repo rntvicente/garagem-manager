@@ -6,7 +6,8 @@ const debug = require('debug')('server');
 
 const conf = require('../commons/conf');
 const pkg = require('../../package.json');
-const routes = require('../routes');
+const healthStatus = require('../health-status');
+const consumer = require('../consumer');
 
 const app = express();
 
@@ -24,7 +25,8 @@ const server = (() => {
       extended: true
     }));
     app.use(compress());
-    app.use(routes);
+    healthStatus.routes(app);
+    consumer.routes(app);
 
     serverProcess = app.listen(app.get('port'), () => {
       debug(chalk.yellow('------------------------------------------------------------------'));

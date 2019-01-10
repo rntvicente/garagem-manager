@@ -4,7 +4,7 @@ const request = require('supertest');
 const { httpStatusCode } = require('../../../lib/commons/utils');
 const applicationServer = require('../../../lib/server');
 
-describe('#Health Status Success case', () => {
+describe('# Caso de Test Consumers', () => {
   let app;
 
   beforeEach((done) => {
@@ -18,13 +18,12 @@ describe('#Health Status Success case', () => {
     applicationServer.stop(done);
   });
 
-  it('Should return status code 200', (done) => {
+  it('Deve retornar 202 quando chamada a route /post', () => {
     request(app)
-      .get('/health-status')
-      .expect(httpStatusCode.ok)
+      .post('/consumers')
+      .expect(httpStatusCode.accepted)
       .end((err) => {
         assert.isNull(err);
-        done();
       });
   });
 });

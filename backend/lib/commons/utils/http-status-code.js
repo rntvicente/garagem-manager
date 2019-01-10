@@ -10,4 +10,4 @@ const httpStatusCode = {
   gatewayTimeout: 504
 };
 
-module.exports = { httpStatusCode };
+module.exports = httpStatusCode;
