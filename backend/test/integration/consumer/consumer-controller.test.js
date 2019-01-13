@@ -71,5 +71,25 @@ describe('# Caso de Test Consumers', () => {
           done();
         });
     });
+
+    it('Deve retornar 400 quando informado mobile sem DDD', (done) => {
+      const input = {
+        mobile: '982247777'
+      };
+
+      const body = {
+        message: 'Failed operation.'
+      };
+
+      request(app)
+        .post('/consumers')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err, res) => {
+          assert.isNull(err);
+          assert.deepEqual(res.body, body);
+          done();
+        });
+    });
   });
 });
