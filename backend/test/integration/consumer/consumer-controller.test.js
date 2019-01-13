@@ -33,6 +33,21 @@ describe('# Caso de Test Consumers', () => {
           done();
         });
     });
+
+    it('Deve retornar 202 quando informado mobile com DDI 55', (done) => {
+      const input = {
+        mobile: '5531982247878'
+      };
+
+      request(app)
+        .post('/consumers')
+        .send(input)
+        .expect(httpStatusCode.accepted)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
   });
 
   describe('Casos de Falhas', () => {
