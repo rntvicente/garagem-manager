@@ -15,11 +15,11 @@ process
   .on('SIGINT', shutdown('SIGINT'))
   .on('SIGHUP', shutdown('SIGHUP'))
   .on('uncaughtException', (err) => {
-    chalk.red(`uncaughtException caught the error: ${err}`);
+    chalk.green(`uncaughtException caught the error: ${err}`);
     throw err;
   })
   .on('exit', (code) => {
-    chalk.info(`Node process exit with code: ${code}`);
+    chalk.red(`Node process exit with code: ${code}`);
   });
 
 server.start((err) => {
