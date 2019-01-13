@@ -19,7 +19,7 @@ describe('# Caso de Test Consumers', () => {
   });
 
   describe('Casos de sucesso', () => {
-    it('Deve retornar 202 quando chamada a route /post', () => {
+    it('Deve retornar 202 quando chamada a route /post', (done) => {
       const input = {
         mobile: '11982247184'
       };
@@ -30,6 +30,7 @@ describe('# Caso de Test Consumers', () => {
         .expect(httpStatusCode.accepted)
         .end((err) => {
           assert.isNull(err);
+          done();
         });
     });
   });
@@ -43,6 +44,26 @@ describe('# Caso de Test Consumers', () => {
       request(app)
         .post('/consumers')
         .send({})
+        .expect(httpStatusCode.badRequest)
+        .end((err, res) => {
+          assert.isNull(err);
+          assert.deepEqual(res.body, body);
+          done();
+        });
+    });
+
+    it.only('Deve retornar 400 quando informado mobile invalido', (done) => {
+      const input = {
+        mobile: 'batata'
+      };
+
+      const body = {
+        message: 'Failed operation.'
+      };
+
+      request(app)
+        .post('/consumers')
+        .send(input)
         .expect(httpStatusCode.badRequest)
         .end((err, res) => {
           assert.isNull(err);
