@@ -21,7 +21,8 @@ describe('# Caso de Test Consumers', () => {
   describe('Casos de sucesso', () => {
     it('Deve retornar 202 quando chamada a route /post', (done) => {
       const input = {
-        mobile: '11982247184'
+        mobile: '11982247184',
+        name: 'Sr. Batata'
       };
 
       request(app)
@@ -36,7 +37,8 @@ describe('# Caso de Test Consumers', () => {
 
     it('Deve retornar 202 quando informado mobile com DDI 55', (done) => {
       const input = {
-        mobile: '5531982247878'
+        mobile: '5531982247878',
+        name: 'Sr. Batata'
       };
 
       request(app)
@@ -90,6 +92,26 @@ describe('# Caso de Test Consumers', () => {
     it('Deve retornar 400 quando informado mobile sem DDD', (done) => {
       const input = {
         mobile: '982247777'
+      };
+
+      const body = {
+        message: 'Failed operation.'
+      };
+
+      request(app)
+        .post('/consumers')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err, res) => {
+          assert.isNull(err);
+          assert.deepEqual(res.body, body);
+          done();
+        });
+    });
+
+    it('Deve retornar 400 quando não informado nome', (done) => {
+      const input = {
+        mobile: '13982247475'
       };
 
       const body = {
