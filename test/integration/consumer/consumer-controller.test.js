@@ -128,5 +128,25 @@ describe('# Caso de Test Consumers', () => {
           done();
         });
     });
+
+    it('Deve retonar 400 quando informado mobile number.', (done) => {
+      const input = {
+        mobile: 13982247475
+      };
+
+      const body = {
+        message: 'Failed operation.'
+      };
+
+      request(app)
+        .post('/consumers')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err, res) => {
+          assert.isNull(err);
+          assert.deepEqual(res.body, body);
+          done();
+        });
+    });
   });
 });
