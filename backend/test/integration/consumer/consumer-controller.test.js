@@ -52,7 +52,7 @@ describe('# Caso de Test Consumers', () => {
         });
     });
 
-    it.only('Deve retornar 400 quando informado mobile invalido', (done) => {
+    it('Deve retornar 400 quando informado mobile invalido', (done) => {
       const input = {
         mobile: 'batata'
       };
