@@ -1,23 +1,10 @@
 const { assert } = require('chai');
 const request = require('supertest');
 
+const app = require('../../../lib/server');
 const { httpStatusCode } = require('../../../lib/commons/utils');
-const applicationServer = require('../../../lib/server');
 
 describe('#Health Status Success case', () => {
-  let app;
-
-  beforeEach((done) => {
-    applicationServer.start((err, express) => {
-      app = express;
-      done();
-    });
-  });
-
-  afterEach((done) => {
-    applicationServer.stop(done);
-  });
-
   it('Should return status code 200', (done) => {
     request(app)
       .get('/health-status')

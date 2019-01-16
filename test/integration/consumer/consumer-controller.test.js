@@ -1,23 +1,10 @@
 const { assert } = require('chai');
 const request = require('supertest');
 
+const app = require('../../../lib/server');
 const { httpStatusCode } = require('../../../lib/commons/utils');
-const applicationServer = require('../../../lib/server');
 
 describe('# Caso de Test Consumers', () => {
-  let app;
-
-  beforeEach((done) => {
-    applicationServer.start((err, express) => {
-      app = express;
-      done();
-    });
-  });
-
-  afterEach((done) => {
-    applicationServer.stop(done);
-  });
-
   describe('Casos de sucesso', () => {
     it('Deve retornar 202 quando chamada a route /post', (done) => {
       const input = {
@@ -145,6 +132,22 @@ describe('# Caso de Test Consumers', () => {
         .end((err, res) => {
           assert.isNull(err);
           assert.deepEqual(res.body, body);
+          done();
+        });
+    });
+
+    it.skip('Deve retornar 500 quando erro não encontrado Banco de Dados.', (done) => {
+      const input = {
+        mobile: '5531982247878',
+        name: 'Sr. Batata'
+      };
+
+      request(app)
+        .post('/consumers')
+        .send(input)
+        .expect(httpStatusCode.internalServerError)
+        .end((err) => {
+          assert.isNull(err);
           done();
         });
     });
