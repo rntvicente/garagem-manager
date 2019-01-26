@@ -1,5 +1,5 @@
 {
   "PORT": 3000,
-  "MONGO_URL": "http://requestb.in/",
+  "MONGO_URL": "mongodb://admin:iron$man1@ds211265.mlab.com:11265/garage-manager",
   "MONGO_URL_TEST": "mongodb://localhost:27017/garagemTest"
 }

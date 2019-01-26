@@ -6,3 +6,9 @@ before((done) => {
     done();
   });
 });
+
+after((done) => {
+  db.dropDatabase(() => {
+    db.close(done);
+  });
+});
