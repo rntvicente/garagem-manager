@@ -1,6 +1,6 @@
 const Chance = require('chance');
 
-const { insert } = require('../../../lib/consumer/model');
+const model = require('../../../lib/consumer/model');
 
 const chance = new Chance();
 
@@ -9,6 +9,6 @@ const dbModel = (data = {}) => ({
   name: data.name || chance.name({ nationality: 'it' })
 });
 
-const populate = (query, callback) => insert(query, callback);
+const populate = (query, callback) => model.insertOne(query, callback);
 
 module.exports = { dbModel, populate };

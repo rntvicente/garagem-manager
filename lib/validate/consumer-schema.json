@@ -4,7 +4,8 @@
   "properties": {
     "mobile": {
       "type": "string",
-      "pattern": "/^(?:(55[0-9]{2})|[0-9]{2})[6-9][0-9]{8}$/"
+      "pattern": "/^(?:(55[0-9]{2})|[0-9]{2})[6-9][0-9]{8}$/",
+      "unique": true
     },
     "name": {
       "type": "string",

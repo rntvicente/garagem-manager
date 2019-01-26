@@ -7,18 +7,22 @@ const model = require('../../../lib/consumer/model');
 const { httpStatusCode } = require('../../../lib/commons/utils');
 const { consumer } = require('../../fixtures');
 
-describe('# Caso de Test Consumers', () => {
+describe('#POST Caso de Test Consumers', () => {
   describe('Casos de sucesso', () => {
     it('Deve retornar 202 quando chamada a route /post', (done) => {
       const input = consumer.dbModel();
+
+      const stub = sinon.stub(model, 'insertOne')
+        .callsFake((arg1, callback) => callback(null, input));
 
       request(app)
         .post('/consumers')
         .send(input)
         .expect(httpStatusCode.accepted)
-        .end((erro) => {
-          assert.isNull(erro);
-
+        .end((err, res) => {
+          assert.isNull(err);
+          assert.deepEqual(res.body, input);
+          stub.restore();
           done();
         });
     });
@@ -26,12 +30,17 @@ describe('# Caso de Test Consumers', () => {
     it('Deve retornar 202 quando informado mobile com DDI 55', (done) => {
       const input = consumer.dbModel({ mobile: '5511982247878' });
 
+      const stub = sinon.stub(model, 'insertOne')
+        .callsFake((arg1, callback) => callback(null, input));
+
       request(app)
         .post('/consumers')
         .send(input)
         .expect(httpStatusCode.accepted)
-        .end((erro) => {
-          assert.isNull(erro);
+        .end((err, res) => {
+          assert.isNull(err);
+          assert.deepEqual(res.body, input);
+          stub.restore();
           done();
         });
     });
