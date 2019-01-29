@@ -30,7 +30,7 @@ describe('#POST Casos de Test Car', () => {
         });
     });
 
-    it('Deve retonar 404 quando não tiver placa informada.', (done) => {
+    it('Deve retonar 400 quando não tiver placa informada.', (done) => {
       request(app)
         .post('/car/board/')
         .send()

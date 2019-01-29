@@ -1,0 +1,13 @@
+{
+  "title": "board",
+  "type": "object",
+  "properties": {
+    "board": {
+      "type": "string",
+      "pattern": "/[A-Z]{3}[0-9]{4}$/"
+    }
+  },
+  "required": [
+    "board"
+  ]
+}

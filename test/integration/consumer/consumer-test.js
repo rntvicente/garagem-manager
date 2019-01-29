@@ -48,17 +48,12 @@ describe('#POST Caso de Test Consumers', () => {
 
   describe('Casos de Falhas', () => {
     it('Deve retornar 400 quando não informado body', (done) => {
-      const body = {
-        message: 'Failed operation.'
-      };
-
       request(app)
         .post('/consumers')
         .send({})
         .expect(httpStatusCode.badRequest)
-        .end((err, res) => {
+        .end((err) => {
           assert.isNull(err);
-          assert.deepEqual(res.body, body);
           done();
         });
     });
@@ -68,17 +63,12 @@ describe('#POST Caso de Test Consumers', () => {
         mobile: 'batata'
       };
 
-      const body = {
-        message: 'Failed operation.'
-      };
-
       request(app)
         .post('/consumers')
         .send(input)
         .expect(httpStatusCode.badRequest)
-        .end((err, res) => {
+        .end((err) => {
           assert.isNull(err);
-          assert.deepEqual(res.body, body);
           done();
         });
     });
@@ -88,17 +78,12 @@ describe('#POST Caso de Test Consumers', () => {
         mobile: '982247777'
       };
 
-      const body = {
-        message: 'Failed operation.'
-      };
-
       request(app)
         .post('/consumers')
         .send(input)
         .expect(httpStatusCode.badRequest)
-        .end((err, res) => {
+        .end((err) => {
           assert.isNull(err);
-          assert.deepEqual(res.body, body);
           done();
         });
     });
@@ -108,17 +93,12 @@ describe('#POST Caso de Test Consumers', () => {
         mobile: '982247777'
       };
 
-      const body = {
-        message: 'Failed operation.'
-      };
-
       request(app)
         .post('/consumers')
         .send(input)
         .expect(httpStatusCode.badRequest)
-        .end((err, res) => {
+        .end((err) => {
           assert.isNull(err);
-          assert.deepEqual(res.body, body);
           done();
         });
     });
@@ -128,17 +108,12 @@ describe('#POST Caso de Test Consumers', () => {
         mobile: 13982247475
       };
 
-      const body = {
-        message: 'Failed operation.'
-      };
-
       request(app)
         .post('/consumers')
         .send(input)
         .expect(httpStatusCode.badRequest)
-        .end((err, res) => {
+        .end((err) => {
           assert.isNull(err);
-          assert.deepEqual(res.body, body);
           done();
         });
     });
@@ -148,17 +123,12 @@ describe('#POST Caso de Test Consumers', () => {
         mobile: '13982247475'
       };
 
-      const body = {
-        message: 'Failed operation.'
-      };
-
       request(app)
         .post('/consumers')
         .send(input)
         .expect(httpStatusCode.badRequest)
-        .end((err, res) => {
+        .end((err) => {
           assert.isNull(err);
-          assert.deepEqual(res.body, body);
           done();
         });
     });
