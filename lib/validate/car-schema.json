@@ -17,7 +17,10 @@
     "year": {
       "type": "integer",
       "minLength": 4
-    }
+    },
+    "created": {
+      "type": "object"
+    }  
   },
   "required": [
     "board",

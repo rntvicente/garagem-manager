@@ -1,7 +1,9 @@
 const { assert } = require('chai');
 const request = require('supertest');
+const sinon = require('sinon');
 
 const app = require('../../../lib/server');
+const model = require('../../../lib/car/model');
 const { httpStatusCode } = require('../../../lib/commons/utils');
 const { car } = require('../../fixtures');
 
@@ -10,12 +12,16 @@ describe('#POST Casos de Test Car', () => {
     it('Deve retornar 202 e inserir carro quando não encontrado.', (done) => {
       const input = car.dbModel();
 
+      const stub = sinon.stub(model, 'findOneAndUpdate')
+        .callsFake((arg1, arg2, callback) => callback(null, input));
+
       request(app)
         .post('/car')
         .send(input)
         .expect(httpStatusCode.accepted)
         .end((err) => {
           assert.isNull(err);
+          stub.restore();
           done();
         });
     });
