@@ -93,5 +93,19 @@ describe('#GET Casos de Test Car', () => {
           done();
         });
     });
+
+    it('Deve retonar 400 quando Marca for vazio.', (done) => {
+      const input = car.dbModel();
+
+      input.brand = '';
+      request(app)
+        .get('/car')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
   });
 });
