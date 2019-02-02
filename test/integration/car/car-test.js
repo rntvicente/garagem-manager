@@ -40,9 +40,11 @@ describe('#GET Casos de Test Car', () => {
     });
 
     it('Deve retonar 400 quando placa incorreta.', (done) => {
+      const input = car.dbModel({ board: '1234AAA' });
+
       request(app)
         .get('/car')
-        .send()
+        .send(input)
         .expect(httpStatusCode.badRequest)
         .end((err) => {
           assert.isNull(err);
@@ -50,10 +52,24 @@ describe('#GET Casos de Test Car', () => {
         });
     });
 
-    it('Deve retonar 400 quando não informado placa.', (done) => {
+    it('Deve retonar 400 quando placa for undefined.', (done) => {
       const input = car.dbModel();
 
       input.board = undefined;
+      request(app)
+        .get('/car')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
+
+    it('Deve retonar 400 quando placa for vazio.', (done) => {
+      const input = car.dbModel();
+
+      input.board = '';
       request(app)
         .get('/car')
         .send(input)
