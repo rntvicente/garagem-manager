@@ -28,7 +28,7 @@ describe('#GET Casos de Test Car', () => {
   });
 
   describe('Casos de Falhas', () => {
-    it('Deve retonar 404 quando não tiver placa informada.', (done) => {
+    it('Deve retonar 404 quando não informado body.', (done) => {
       request(app)
         .get('/car')
         .send()
@@ -39,7 +39,7 @@ describe('#GET Casos de Test Car', () => {
         });
     });
 
-    it('Deve retonar 400 quando placa incorreta.', (done) => {
+    it('Deve retonar 400 quando Placa incorreta.', (done) => {
       const input = car.dbModel({ board: '1234AAA' });
 
       request(app)
@@ -52,7 +52,7 @@ describe('#GET Casos de Test Car', () => {
         });
     });
 
-    it('Deve retonar 400 quando placa for undefined.', (done) => {
+    it('Deve retonar 400 quando Placa for undefined.', (done) => {
       const input = car.dbModel();
 
       input.board = undefined;
@@ -66,10 +66,24 @@ describe('#GET Casos de Test Car', () => {
         });
     });
 
-    it('Deve retonar 400 quando placa for vazio.', (done) => {
+    it('Deve retonar 400 quando Placa for vazio.', (done) => {
       const input = car.dbModel();
 
       input.board = '';
+      request(app)
+        .get('/car')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
+
+    it('Deve retonar 400 quando Marca for undefined.', (done) => {
+      const input = car.dbModel();
+
+      input.brand = undefined;
       request(app)
         .get('/car')
         .send(input)
