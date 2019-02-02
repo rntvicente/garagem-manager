@@ -7,7 +7,7 @@ const model = require('../../../lib/car/model');
 const { httpStatusCode } = require('../../../lib/commons/utils');
 const { car } = require('../../fixtures');
 
-describe('#POST Casos de Test Car', () => {
+describe('#GET Casos de Test Car', () => {
   describe('Casos de Sucesso', () => {
     it('Deve retornar 202 e inserir carro quando não encontrado.', (done) => {
       const input = car.dbModel();
@@ -16,7 +16,7 @@ describe('#POST Casos de Test Car', () => {
         .callsFake((arg1, arg2, callback) => callback(null, input));
 
       request(app)
-        .post('/car')
+        .get('/car')
         .send(input)
         .expect(httpStatusCode.accepted)
         .end((err) => {
@@ -30,7 +30,7 @@ describe('#POST Casos de Test Car', () => {
   describe('Casos de Falhas', () => {
     it('Deve retonar 404 quando não tiver placa informada.', (done) => {
       request(app)
-        .post('/car')
+        .get('/car')
         .send()
         .expect(httpStatusCode.badRequest)
         .end((err) => {
@@ -41,8 +41,22 @@ describe('#POST Casos de Test Car', () => {
 
     it('Deve retonar 400 quando placa incorreta.', (done) => {
       request(app)
-        .post('/car')
+        .get('/car')
         .send()
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
+
+    it('Deve retonar 400 quando não informado placa.', (done) => {
+      const input = car.dbModel();
+
+      input.board = undefined;
+      request(app)
+        .get('/car')
+        .send(input)
         .expect(httpStatusCode.badRequest)
         .end((err) => {
           assert.isNull(err);
