@@ -1,16 +1,16 @@
 const Chance = require('chance');
 
-const model = require('../../../lib/car/model');
+const brands = require('./brands');
 
 const chance = new Chance();
 
 const dbModel = (data = {}) => ({
   board: data.board || `${chance.word({ length: 3 }).toUpperCase()}${chance.year()}`,
+  brand: data.brand || chance.pickone(brands.map(item => item.nameFipe)),
   model: data.model || chance.first(),
-  brand: data.brand || chance.last(),
   year: data.year || Number(chance.year())
 });
 
-const populate = (query, callback) => model.insertOne(query, callback);
+const findOneBrand = brand => brands.find(f => f.nameFipe === brand);
 
-module.exports = { dbModel, populate };
+module.exports = { dbModel, findOneBrand };

@@ -3,25 +3,32 @@ const request = require('supertest');
 const sinon = require('sinon');
 
 const app = require('../../../lib/server');
-const model = require('../../../lib/car/model');
+const modelCar = require('../../../lib/car/model-car');
+const modelBrand = require('../../../lib/car/model-brand');
 const { httpStatusCode } = require('../../../lib/commons/utils');
 const { car } = require('../../fixtures');
 
 describe('#GET Casos de Test Car', () => {
   describe('Casos de Sucesso', () => {
-    it('Deve retornar 202 e inserir carro quando não encontrado.', (done) => {
+    it('Deve retornar 201 quando a placa não existir.', (done) => {
       const input = car.dbModel();
 
-      const stub = sinon.stub(model, 'findOneAndUpdate')
+      const brand = car.findOneBrand(input.brand);
+
+      const stubBrand = sinon.stub(modelBrand, 'findOne')
+        .callsFake((arg1, callback) => callback(null, brand));
+
+      const stubCar = sinon.stub(modelCar, 'findOneAndUpdate')
         .callsFake((arg1, arg2, callback) => callback(null, input));
 
       request(app)
         .get('/car')
         .send(input)
-        .expect(httpStatusCode.accepted)
+        .expect(httpStatusCode.created)
         .end((err) => {
           assert.isNull(err);
-          stub.restore();
+          stubCar.restore();
+          stubBrand.restore();
           done();
         });
     });
@@ -104,6 +111,23 @@ describe('#GET Casos de Test Car', () => {
         .expect(httpStatusCode.badRequest)
         .end((err) => {
           assert.isNull(err);
+          done();
+        });
+    });
+
+    it('Deve retonar 404 quando Marca não existir.', (done) => {
+      const input = car.dbModel({ brand: 'batata' });
+
+      const stub = sinon.stub(modelBrand, 'findOne')
+        .callsFake((arg1, callback) => callback(null, null));
+
+      request(app)
+        .get('/car')
+        .send(input)
+        .expect(httpStatusCode.notFound)
+        .end((err) => {
+          assert.isNull(err);
+          stub.restore();
           done();
         });
     });

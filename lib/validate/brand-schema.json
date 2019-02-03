@@ -1,0 +1,31 @@
+{
+  "title": "brand",
+  "type": "object",
+  "properties": {
+    "brands": {
+      "type": "array",
+      "item": {
+        "required": [
+          "name",
+          "nameFipe",
+          "key"
+        ],
+        "name": {
+          "type": "string",
+          "minLength": 3
+        },
+        "nameFipe": {
+          "type": "string",
+          "minLength": 3
+        },
+        "key": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    }
+  },
+  "required": [
+    "brands"
+  ]
+}
