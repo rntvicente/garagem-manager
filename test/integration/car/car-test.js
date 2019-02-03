@@ -146,5 +146,20 @@ describe('#GET Casos de Test Car', () => {
           done();
         });
     });
+
+    it('Deve retonar 400 quando Modelo for vazio.', (done) => {
+      const input = car.dbModel();
+
+      input.model = '';
+
+      request(app)
+        .get('/car')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
   });
 });
