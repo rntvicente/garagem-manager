@@ -163,3 +163,33 @@ describe('#GET Casos de Test Car', () => {
     });
   });
 });
+
+describe('#POST Casos de Test Brand', () => {
+  describe('Casos de Sucessos', () => {
+    it('Deve retornar 201 quando informando Marca.', (done) => {
+      const result = car.findOneBrand('GM - Chevrolet');
+
+      const input = {
+        brands: [{
+          name: 'CHEVROLET',
+          nameFipe: 'GM - Chevrolet',
+          key: 'gm-chevrolet-23'
+        }]
+      };
+
+      const stubBrand = sinon.stub(modelBrand, 'insertMany')
+        .callsFake((arg1, callback) => callback(null, result));
+
+      request(app)
+        .post('/brands')
+        .send(input)
+        .expect(httpStatusCode.created)
+        .end((err, res) => {
+          assert.isNull(err);
+          assert.deepEqual(res.body, result);
+          stubBrand.restore();
+          done();
+        });
+    });
+  });
+});
