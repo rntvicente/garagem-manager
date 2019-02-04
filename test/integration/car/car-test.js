@@ -35,7 +35,7 @@ describe('#GET Casos de Test Car', () => {
   });
 
   describe('Casos de Falhas', () => {
-    it('Deve retornar 500 quando chando modelCar.findOneAndUpdate falhar.', (done) => {
+    it('Deve retornar 500 quando chamado modelCar.findOneAndUpdate falhar.', (done) => {
       const result = car.findOneBrand('GM - Chevrolet');
 
       const input = car.dbModel();
@@ -54,6 +54,23 @@ describe('#GET Casos de Test Car', () => {
           assert.isNull(err);
           stubBrand.restore();
           stubCar.restore();
+          done();
+        });
+    });
+
+    it('Deve retornar 500 quando chamado modelBrand.findOne falhar.', (done) => {
+      const input = car.dbModel();
+
+      const stubBrand = sinon.stub(modelBrand, 'findOne')
+        .callsFake((arg1, callback) => callback('Internal Server Error'));
+
+      request(app)
+        .get('/car')
+        .send(input)
+        .expect(httpStatusCode.internalServerError)
+        .end((err) => {
+          assert.isNull(err);
+          stubBrand.restore();
           done();
         });
     });
@@ -210,6 +227,148 @@ describe('#POST Casos de Test Brand', () => {
         .end((err, res) => {
           assert.isNull(err);
           assert.deepEqual(res.body, result);
+          stubBrand.restore();
+          done();
+        });
+    });
+  });
+
+  describe('Casos de Falhas', () => {
+    it('Deve retornar 500 quando banco falhar.', (done) => {
+      const input = {
+        brands: [{
+          name: 'CHEVROLET',
+          nameFipe: 'GM - Chevrolet',
+          key: 'gm-chevrolet-23'
+        }]
+      };
+
+      const stubBrand = sinon.stub(modelBrand, 'insertMany')
+        .callsFake((arg1, callback) => callback('INternal Server Error'));
+
+      request(app)
+        .post('/brands')
+        .send(input)
+        .expect(httpStatusCode.internalServerError)
+        .end((err) => {
+          assert.isNull(err);
+          stubBrand.restore();
+          done();
+        });
+    });
+
+    it('Deve retornar 400 quando body for vazio.', (done) => {
+      request(app)
+        .post('/brands')
+        .send()
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
+
+    it('Deve retornar 400 quando Brands for undenifed.', (done) => {
+      const input = {
+        brands: undefined
+      };
+
+      request(app)
+        .post('/brands')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
+
+    it('Deve retornar 400 quando Brands tiver array vazio.', (done) => {
+      const input = {
+        brands: [{}]
+      };
+
+      request(app)
+        .post('/brands')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
+
+    it('Deve retornar 400 quando não informado name.', (done) => {
+      const input = {
+        brands: [{
+          nameFipe: 'GM - Chevrolet',
+          key: 'gm-chevrolet-23'
+        }]
+      };
+
+      request(app)
+        .post('/brands')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
+
+    it('Deve retornar 400 quando não informado nameFipe.', (done) => {
+      const input = {
+        brands: [{
+          name: 'CHEVROLET',
+          key: 'gm-chevrolet-23'
+        }]
+      };
+
+      request(app)
+        .post('/brands')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
+
+    it('Deve retornar 400 quando não informado key.', (done) => {
+      const input = {
+        brands: [{
+          name: 'CHEVROLET',
+          nameFipe: 'GM - Chevrolet',
+        }]
+      };
+
+      request(app)
+        .post('/brands')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
+          done();
+        });
+    });
+
+    it('Deve retornar 500 quando duplicar Marca.', (done) => {
+      const input = {
+        brands: [{
+          name: 'CHEVROLET',
+          nameFipe: 'GM - Chevrolet',
+        }]
+      };
+
+      const stubBrand = sinon.stub(modelBrand, 'insertMany')
+        .callsFake((arg1, callback) => callback('Duplicate register'));
+
+      request(app)
+        .post('/brands')
+        .send(input)
+        .expect(httpStatusCode.badRequest)
+        .end((err) => {
+          assert.isNull(err);
           stubBrand.restore();
           done();
         });

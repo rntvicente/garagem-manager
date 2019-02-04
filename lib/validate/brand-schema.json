@@ -1,31 +1,27 @@
 {
   "title": "brand",
-  "type": "object",
+  "required": [ "brands" ],
   "properties": {
     "brands": {
       "type": "array",
-      "item": {
-        "required": [
-          "name",
-          "nameFipe",
-          "key"
-        ],
-        "name": {
-          "type": "string",
-          "minLength": 3
-        },
-        "nameFipe": {
-          "type": "string",
-          "minLength": 3
-        },
-        "key": {
-          "type": "string",
-          "minLength": 3
+      "items": {
+        "type": "object",
+        "required": [ "name", "nameFipe", "key" ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3
+          },
+          "nameFipe": {
+            "type": "string",
+            "minLength": 3
+          },
+          "key": {
+            "type": "string",
+            "minLength": 3
+          }
         }
       }
     }
-  },
-  "required": [
-    "brands"
-  ]
+  }
 }
