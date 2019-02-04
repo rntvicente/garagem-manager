@@ -35,6 +35,29 @@ describe('#GET Casos de Test Car', () => {
   });
 
   describe('Casos de Falhas', () => {
+    it('Deve retornar 500 quando chando modelCar.findOneAndUpdate falhar.', (done) => {
+      const result = car.findOneBrand('GM - Chevrolet');
+
+      const input = car.dbModel();
+
+      const stubBrand = sinon.stub(modelBrand, 'findOne')
+        .callsFake((arg1, callback) => callback(null, result));
+
+      const stubCar = sinon.stub(modelCar, 'findOneAndUpdate')
+        .callsFake((arg1, arg2, callback) => callback('Internal Server Error'));
+
+      request(app)
+        .get('/car')
+        .send(input)
+        .expect(httpStatusCode.internalServerError)
+        .end((err) => {
+          assert.isNull(err);
+          stubBrand.restore();
+          stubCar.restore();
+          done();
+        });
+    });
+
     it('Deve retonar 404 quando não informado body.', (done) => {
       request(app)
         .get('/car')
