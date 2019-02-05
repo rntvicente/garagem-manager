@@ -190,5 +190,42 @@ describe('#GET Caso de Test Consumers', () => {
           done();
         });
     });
+
+    it('Deve retornar 500 quando houver alguma falha de banco.', (done) => {
+      const input = consumer.dbModel();
+
+      const stub = sinon.stub(model, 'findOne')
+        .callsFake((arg1, callback) => callback('Internal Server Error'));
+
+      request(app)
+        .get(`/consumers/mobile/${input.mobile}`)
+        .send(input)
+        .expect(httpStatusCode.internalServerError)
+        .end((err) => {
+          assert.isNull(err);
+          stub.restore();
+          done();
+        });
+    });
+
+    it('Deve retornar 404 quando não encontrado mobile informado.', (done) => {
+      const input = consumer.dbModel();
+
+      const stub = sinon.stub(model, 'findOne')
+        .callsFake((arg1, callback) => callback(null, null));
+
+      const error = { message: `Mobile ${input.mobile} not found.` };
+
+      request(app)
+        .get(`/consumers/mobile/${input.mobile}`)
+        .send(input)
+        .expect(httpStatusCode.notFound)
+        .end((err, res) => {
+          assert.isNull(err);
+          assert.deepEqual(res.body, error);
+          stub.restore();
+          done();
+        });
+    });
   });
 });
