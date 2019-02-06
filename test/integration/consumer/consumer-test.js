@@ -12,17 +12,12 @@ describe('#POST Caso de Test Consumers', () => {
     it('Deve retornar 202 quando chamado a rota', (done) => {
       const input = consumer.dbModel();
 
-      const stub = sinon.stub(model, 'insertOne')
-        .callsFake((arg1, callback) => callback(null, input));
-
       request(app)
         .post('/consumers')
         .send(input)
         .expect(httpStatusCode.accepted)
-        .end((err, res) => {
+        .end((err) => {
           assert.isNull(err);
-          assert.deepEqual(res.body, input);
-          stub.restore();
           done();
         });
     });
@@ -30,17 +25,12 @@ describe('#POST Caso de Test Consumers', () => {
     it('Deve retornar 202 quando informado mobile com DDI 55', (done) => {
       const input = consumer.dbModel({ mobile: '5511982247878' });
 
-      const stub = sinon.stub(model, 'insertOne')
-        .callsFake((arg1, callback) => callback(null, input));
-
       request(app)
         .post('/consumers')
         .send(input)
         .expect(httpStatusCode.accepted)
-        .end((err, res) => {
+        .end((err) => {
           assert.isNull(err);
-          assert.deepEqual(res.body, input);
-          stub.restore();
           done();
         });
     });
@@ -157,19 +147,19 @@ describe('#GET Caso de Test Consumers', () => {
     it('Deve retornar 200 quando encontrar mobile 5511982247171', (done) => {
       const input = consumer.dbModel();
 
-      const stub = sinon.stub(model, 'findOne')
-        .callsFake((arg1, callback) => callback(null, input));
+      consumer.populate(input, (error) => {
+        assert.isNull(error);
 
-      request(app)
-        .get(`/consumers/mobile/${input.mobile}`)
-        .send(input)
-        .expect(httpStatusCode.ok)
-        .end((err, res) => {
-          assert.isNull(err);
-          assert.deepEqual(res.body, input);
-          stub.restore();
-          done();
-        });
+        request(app)
+          .get(`/consumers/mobile/${input.mobile}`)
+          .send(input)
+          .expect(httpStatusCode.ok)
+          .end((err, res) => {
+            assert.isNull(err);
+            assert.equal(res.body.mobile, input.mobile);
+            done();
+          });
+      });
     });
   });
 
@@ -211,21 +201,18 @@ describe('#GET Caso de Test Consumers', () => {
     it('Deve retornar 404 quando não encontrado mobile informado.', (done) => {
       const input = consumer.dbModel();
 
-      const stub = sinon.stub(model, 'findOne')
-        .callsFake((arg1, callback) => callback(null, null));
+      consumer.populate(input, (error) => {
+        assert.isNull(error);
 
-      const error = { message: `Mobile ${input.mobile} not found.` };
-
-      request(app)
-        .get(`/consumers/mobile/${input.mobile}`)
-        .send(input)
-        .expect(httpStatusCode.notFound)
-        .end((err, res) => {
-          assert.isNull(err);
-          assert.deepEqual(res.body, error);
-          stub.restore();
-          done();
-        });
+        request(app)
+          .get('/consumers/mobile/5511982247172')
+          .send(input)
+          .expect(httpStatusCode.notFound)
+          .end((err) => {
+            assert.isNull(err);
+            done();
+          });
+      });
     });
   });
 });

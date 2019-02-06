@@ -1,5 +1,6 @@
 {
   "PORT": 3000,
   "MONGO_URL": "mongodb://admin:iron$man1@ds211265.mlab.com:11265/garage-manager",
+  "MONGO_TEST": "mongodb://127.0.0.1/garagemTest",
   "FIPE_URL": "http://fipeapi.appspot.com/api/1/carros/veiculos/"
 }
