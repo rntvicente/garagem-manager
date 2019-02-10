@@ -3,7 +3,6 @@ const sinon = require('sinon');
 const Chance = require('chance');
 
 const { httpStatusCode } = require('../../../lib/commons/utils');
-const database = require('../../../lib/commons/database');
 const service = require('../../../lib/car/service');
 const modelCar = require('../../../lib/car/model-car');
 const modelBrand = require('../../../lib/car/model-brand');
@@ -17,10 +16,6 @@ describe('# Casos de Test Unit Car Service', () => {
       assert.isNull(err);
       done();
     });
-  });
-
-  after((done) => {
-    database.dropCollections('cars', 'brands', done);
   });
 
   describe('Casos de Sucesso', () => {
