@@ -1,43 +1,61 @@
 const { assert } = require('chai');
 const sinon = require('sinon');
+const Chance = require('chance');
 
 const { httpStatusCode } = require('../../../lib/commons/utils');
+const database = require('../../../lib/commons/database');
 const service = require('../../../lib/car/service');
 const modelCar = require('../../../lib/car/model-car');
 const modelBrand = require('../../../lib/car/model-brand');
 const { car } = require('../../fixtures');
 
+const chance = new Chance();
+
 describe('# Casos de Test Unit Car Service', () => {
+  before((done) => {
+    car.populateBrands(car.listBrand, (err) => {
+      assert.isNull(err);
+      done();
+    });
+  });
+
+  after((done) => {
+    database.dropCollections('cars', 'brands', done);
+  });
+
   describe('Casos de Sucesso', () => {
     it('Deve retornar Carro quando chamado modelCar.findOneAndUpdate', () => {
-      const result = car.dbModel();
-      const query = {};
-      const setOnInsert = {};
+      const input = car.dbModel();
+      input._id = chance.hash();
+      input.created = new Date();
 
-      const stub = sinon.stub(modelCar, 'findOneAndUpdate')
-        .callsFake((arg1, arg2, callback) => callback(null, result));
+      const setOnInsert = {
+        $setOnInsert: {
+          board: input.board,
+          model: input.model,
+          brand: input.brand,
+          year: input.year,
+          created: input.created,
+          _id: input._id
+        }
+      };
 
-      service.findOneAndUpdateCar(query, setOnInsert, (err, res) => {
+      service.findOneAndUpdateCar({ board: input.board }, setOnInsert, (err, res) => {
         assert.isNull(err);
-        assert.strictEqual(res, result);
-        stub.restore();
+        assert.deepEqual(res.value, input);
       });
     });
 
     it('Deve inserir Marcas quando chamado model.insertManyBrands', () => {
-      const result = {
-        name: 'AUDI',
-        nameFipe: 'Audi',
-        key: 'audi-6'
-      };
-
-      const stub = sinon.stub(modelBrand, 'insertMany')
-        .callsFake((arg1, callback) => callback(null, result));
+      const result = [{
+        name: 'BATATA',
+        nameFipe: 'Batata Frita',
+        key: 'batata-6'
+      }];
 
       service.insertManyBrands(result, (err, res) => {
         assert.isNull(err);
-        assert.strictEqual(res, result);
-        stub.restore();
+        assert.deepEqual(res.ops[0], result[0]);
       });
     });
 
@@ -46,15 +64,11 @@ describe('# Casos de Test Unit Car Service', () => {
         nameFipe: 'Audi'
       };
 
-      const result = car.findOneBrand(query.nameFipe);
-
-      const stub = sinon.stub(modelBrand, 'findOne')
-        .callsFake((arg1, callback) => callback(null, result));
+      const result = car.listBrand.find(f => f.nameFipe === query.nameFipe);
 
       service.findOneBrand(query, (err, res) => {
         assert.isNull(err);
-        assert.strictEqual(res, result);
-        stub.restore();
+        assert.deepEqual(res, result);
       });
     });
   });

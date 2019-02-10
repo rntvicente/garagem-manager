@@ -3,45 +3,73 @@ const request = require('supertest');
 const sinon = require('sinon');
 
 const app = require('../../../lib/server');
+const database = require('../../../lib/commons/database');
 const modelCar = require('../../../lib/car/model-car');
 const modelBrand = require('../../../lib/car/model-brand');
 const { httpStatusCode } = require('../../../lib/commons/utils');
 const { car } = require('../../fixtures');
 
 describe('#GET Casos de Test Car', () => {
+  before((done) => {
+    car.populateBrands(car.listBrand, (err) => {
+      assert.isNull(err);
+      done();
+    });
+  });
+
+  after((done) => {
+    database.dropCollections('cars', 'brands', done);
+  });
+
   describe('Casos de Sucesso', () => {
     it('Deve retornar 201 quando a placa não existir.', (done) => {
       const input = car.dbModel();
-
-      const brand = car.findOneBrand(input.brand);
-
-      const stubBrand = sinon.stub(modelBrand, 'findOne')
-        .callsFake((arg1, callback) => callback(null, brand));
-
-      const stubCar = sinon.stub(modelCar, 'findOneAndUpdate')
-        .callsFake((arg1, arg2, callback) => callback(null, input));
 
       request(app)
         .get('/car')
         .send(input)
         .expect(httpStatusCode.created)
-        .end((err) => {
+        .end((err, res) => {
           assert.isNull(err);
-          stubCar.restore();
-          stubBrand.restore();
+          assert.equal(res.body.value.board, input.board);
           done();
         });
+    });
+
+    it('Deve retornar 201 quando já existir a placa e não deve inserir um novo.', (done) => {
+      const input = car.dbModel();
+
+      modelCar.findOneAndUpdate(
+        { board: input.board },
+        {
+          $setOnInsert: {
+            board: input.board,
+            model: input.model,
+            brand: input.brand,
+            year: input.year,
+            create: new Date()
+          }
+        }, (error, result) => {
+          assert.isNull(error);
+          assert.equal(result.value.board, input.board);
+
+          request(app)
+            .get('/car')
+            .send(input)
+            .expect(httpStatusCode.created)
+            .end((err, resultFind) => {
+              assert.isNull(err);
+              assert.equal(resultFind.body.value.board, input.board);
+              done();
+            });
+        }
+      );
     });
   });
 
   describe('Casos de Falhas', () => {
     it('Deve retornar 500 quando chamado modelCar.findOneAndUpdate falhar.', (done) => {
-      const result = car.findOneBrand('GM - Chevrolet');
-
       const input = car.dbModel();
-
-      const stubBrand = sinon.stub(modelBrand, 'findOne')
-        .callsFake((arg1, callback) => callback(null, result));
 
       const stubCar = sinon.stub(modelCar, 'findOneAndUpdate')
         .callsFake((arg1, arg2, callback) => callback('Internal Server Error'));
@@ -52,7 +80,6 @@ describe('#GET Casos de Test Car', () => {
         .expect(httpStatusCode.internalServerError)
         .end((err) => {
           assert.isNull(err);
-          stubBrand.restore();
           stubCar.restore();
           done();
         });
@@ -158,16 +185,12 @@ describe('#GET Casos de Test Car', () => {
     it('Deve retonar 404 quando Marca não existir.', (done) => {
       const input = car.dbModel({ brand: 'batata' });
 
-      const stub = sinon.stub(modelBrand, 'findOne')
-        .callsFake((arg1, callback) => callback(null, null));
-
       request(app)
         .get('/car')
         .send(input)
         .expect(httpStatusCode.notFound)
         .end((err) => {
           assert.isNull(err);
-          stub.restore();
           done();
         });
     });
@@ -205,9 +228,20 @@ describe('#GET Casos de Test Car', () => {
 });
 
 describe('#POST Casos de Test Brand', () => {
+  before((done) => {
+    car.populateBrands(car.listBrand, (err) => {
+      assert.isNull(err);
+      done();
+    });
+  });
+
+  after((done) => {
+    database.dropCollections('cars', 'brands', done);
+  });
+
   describe('Casos de Sucessos', () => {
     it('Deve retornar 201 quando informando Marca.', (done) => {
-      const result = car.findOneBrand('GM - Chevrolet');
+      const result = car.listBrand.find(f => f.nameFipe === 'GM - Chevrolet');
 
       const input = {
         brands: [{
@@ -217,17 +251,13 @@ describe('#POST Casos de Test Brand', () => {
         }]
       };
 
-      const stubBrand = sinon.stub(modelBrand, 'insertMany')
-        .callsFake((arg1, callback) => callback(null, result));
-
       request(app)
         .post('/brands')
         .send(input)
         .expect(httpStatusCode.created)
         .end((err, res) => {
           assert.isNull(err);
-          assert.deepEqual(res.body, result);
-          stubBrand.restore();
+          assert.equal(res.body.ops[0].key, result.key);
           done();
         });
     });
@@ -360,16 +390,12 @@ describe('#POST Casos de Test Brand', () => {
         }]
       };
 
-      const stubBrand = sinon.stub(modelBrand, 'insertMany')
-        .callsFake((arg1, callback) => callback('Duplicate register'));
-
       request(app)
         .post('/brands')
         .send(input)
         .expect(httpStatusCode.badRequest)
         .end((err) => {
           assert.isNull(err);
-          stubBrand.restore();
           done();
         });
     });

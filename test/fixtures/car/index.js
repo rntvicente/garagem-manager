@@ -1,16 +1,25 @@
 const Chance = require('chance');
 
-const brands = require('./brands');
+const listBrand = require('./brands');
+const modelCar = require('../../../lib/car/model-car');
+const modelBrands = require('../../../lib/car/model-brand');
 
 const chance = new Chance();
 
 const dbModel = (data = {}) => ({
   board: data.board || `${chance.word({ length: 3 }).toUpperCase()}${chance.year()}`,
-  brand: data.brand || chance.pickone(brands.map(item => item.nameFipe)),
+  brand: data.brand || chance.pickone(listBrand.map(item => item.nameFipe)),
   model: data.model || chance.first(),
   year: data.year || Number(chance.year())
 });
 
-const findOneBrand = brand => brands.find(f => f.nameFipe === brand);
+const findOneAndUpdate = (query, set, callback) => modelCar.findOneAndUpdate(query, set, callback);
 
-module.exports = { dbModel, findOneBrand };
+const populateBrands = (brands, callback) => modelBrands.insertMany(brands, callback);
+
+module.exports = {
+  dbModel,
+  findOneAndUpdate,
+  populateBrands,
+  listBrand
+};
