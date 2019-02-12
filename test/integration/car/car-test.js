@@ -26,7 +26,7 @@ describe('#GET Casos de Test Car', () => {
       const input = car.dbModel();
 
       request(app)
-        .get('/car')
+        .get('/cars')
         .send(input)
         .expect(httpStatusCode.created)
         .end((err, res) => {
@@ -54,7 +54,7 @@ describe('#GET Casos de Test Car', () => {
           assert.equal(result.value.board, input.board);
 
           request(app)
-            .get('/car')
+            .get('/cars')
             .send(input)
             .expect(httpStatusCode.created)
             .end((err, resultFind) => {
@@ -75,7 +75,7 @@ describe('#GET Casos de Test Car', () => {
         .callsFake((arg1, arg2, callback) => callback('Internal Server Error'));
 
       request(app)
-        .get('/car')
+        .get('/cars')
         .send(input)
         .expect(httpStatusCode.internalServerError)
         .end((err) => {
@@ -92,7 +92,7 @@ describe('#GET Casos de Test Car', () => {
         .callsFake((arg1, callback) => callback('Internal Server Error'));
 
       request(app)
-        .get('/car')
+        .get('/cars')
         .send(input)
         .expect(httpStatusCode.internalServerError)
         .end((err) => {
@@ -104,7 +104,7 @@ describe('#GET Casos de Test Car', () => {
 
     it('Deve retonar 404 quando não informado body.', (done) => {
       request(app)
-        .get('/car')
+        .get('/cars')
         .send()
         .expect(httpStatusCode.badRequest)
         .end((err) => {
@@ -117,7 +117,7 @@ describe('#GET Casos de Test Car', () => {
       const input = car.dbModel({ board: '1234AAA' });
 
       request(app)
-        .get('/car')
+        .get('/cars')
         .send(input)
         .expect(httpStatusCode.badRequest)
         .end((err) => {
@@ -131,7 +131,7 @@ describe('#GET Casos de Test Car', () => {
 
       input.board = undefined;
       request(app)
-        .get('/car')
+        .get('/cars')
         .send(input)
         .expect(httpStatusCode.badRequest)
         .end((err) => {
@@ -145,7 +145,7 @@ describe('#GET Casos de Test Car', () => {
 
       input.board = '';
       request(app)
-        .get('/car')
+        .get('/cars')
         .send(input)
         .expect(httpStatusCode.badRequest)
         .end((err) => {
@@ -159,7 +159,7 @@ describe('#GET Casos de Test Car', () => {
 
       input.brand = undefined;
       request(app)
-        .get('/car')
+        .get('/cars')
         .send(input)
         .expect(httpStatusCode.badRequest)
         .end((err) => {
@@ -173,7 +173,7 @@ describe('#GET Casos de Test Car', () => {
 
       input.brand = '';
       request(app)
-        .get('/car')
+        .get('/cars')
         .send(input)
         .expect(httpStatusCode.badRequest)
         .end((err) => {
@@ -186,7 +186,7 @@ describe('#GET Casos de Test Car', () => {
       const input = car.dbModel({ brand: 'batata' });
 
       request(app)
-        .get('/car')
+        .get('/cars')
         .send(input)
         .expect(httpStatusCode.notFound)
         .end((err) => {
@@ -201,7 +201,7 @@ describe('#GET Casos de Test Car', () => {
       input.model = undefined;
 
       request(app)
-        .get('/car')
+        .get('/cars')
         .send(input)
         .expect(httpStatusCode.badRequest)
         .end((err) => {
@@ -216,7 +216,7 @@ describe('#GET Casos de Test Car', () => {
       input.model = '';
 
       request(app)
-        .get('/car')
+        .get('/cars')
         .send(input)
         .expect(httpStatusCode.badRequest)
         .end((err) => {
