@@ -3,7 +3,7 @@ const moment = require('moment');
 
 const { fiftDay } = require('../../../lib/util');
 
-describe('# Casos de Test Unit Obter 5ª dia útil', () => {
+describe('# Casos de Test Unit Obter quinto dia útil', () => {
   const SUNDAY = 0;
   const SATURDAY = 6;
 
@@ -26,7 +26,7 @@ describe('# Casos de Test Unit Obter 5ª dia útil', () => {
       expect(result).to.match(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/);
     });
 
-    it('Deve ser uma data útil', () => {
+    it('Deve ser uma data diferente de Sabado e Domingo', () => {
       const referenceDate = moment('2019-02-01').toDate();
       const result = fiftDay.get(referenceDate);
 
@@ -36,49 +36,49 @@ describe('# Casos de Test Unit Obter 5ª dia útil', () => {
       expect(weekDay).to.be.not.equal(SUNDAY);
     });
 
-    it('Deve retornar o quinto dia útil do mês quando o mês inicia na Segunda (2019-04)', () => {
+    it('Deve retornar o quinto dia útil do mês quando iniciado na Segunda (2019-04)', () => {
       const referenceDate = moment('2019-04-25').toDate();
       const result = fiftDay.get(referenceDate);
 
       expect(result).to.be.equal('2019-04-05');
     });
 
-    it('Deve retornar o quinto dia útil do mês quando o mês inicia na Terça (2019-01)', () => {
+    it('Deve retornar o quinto dia útil do mês quando iniciado na Terça (2019-01)', () => {
       const referenceDate = moment('2019-01-25').toDate();
       const result = fiftDay.get(referenceDate);
 
       expect(result).to.be.equal('2019-01-07');
     });
 
-    it('Deve retornar o quinto dia útil do mês quando o mês inicia na Quarta (2019-05)', () => {
+    it('Deve retornar o quinto dia útil do mês quando iniciado na Quarta (2019-05)', () => {
       const referenceDate = moment('2019-05-25').toDate();
       const result = fiftDay.get(referenceDate);
 
       expect(result).to.be.equal('2019-05-07');
     });
 
-    it('Deve retornar o quinto dia útil do mês quando o mês inicia na Quinta (2019-08)', () => {
+    it('Deve retornar o quinto dia útil do mês quando iniciado na Quinta (2019-08)', () => {
       const referenceDate = moment('2019-08-25').toDate();
       const result = fiftDay.get(referenceDate);
 
       expect(result).to.be.equal('2019-08-07');
     });
 
-    it('Deve retornar o quinto dia útil do mês quando o mês inicia na Sexta (2019-02)', () => {
+    it('Deve retornar o quinto dia útil do mês quando iniciado na Sexta (2019-02)', () => {
       const referenceDate = moment('2019-08-25').toDate();
       const result = fiftDay.get(referenceDate);
 
       expect(result).to.be.equal('2019-08-07');
     });
 
-    it('Deve retornar o quinto dia útil do mês quando o mês inicia na Sabado (2019-06)', () => {
+    it('Deve retornar o quinto dia útil do mês quando iniciado na Sabado (2019-06)', () => {
       const referenceDate = moment('2019-06-25').toDate();
       const result = fiftDay.get(referenceDate);
 
       expect(result).to.be.equal('2019-06-07');
     });
 
-    it('Deve retornar o quinto dia útil do mês quando o mês inicia na Domingo (2019-09)', () => {
+    it('Deve retornar o quinto dia útil do mês quando iniciado na Domingo (2019-09)', () => {
       const referenceDate = moment('2019-09-25').toDate();
       const result = fiftDay.get(referenceDate);
 
