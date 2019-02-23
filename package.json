@@ -14,7 +14,7 @@
     "start": "DEBUG=server,server:* nodemon index.js"
   },
   "engine": {
-    "node": "10.15.0"
+    "node": "10.13.0"
   },
   "repository": {
     "type": "git",
@@ -37,6 +37,7 @@
     "debug": "^4.1.1",
     "express": "^4.16.4",
     "ip": "^1.1.5",
+    "moment": "^2.24.0",
     "mongodb": "^3.1.13",
     "nconf": "^0.10.0",
     "nodemon": "^1.18.9",
