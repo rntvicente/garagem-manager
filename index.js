@@ -10,7 +10,10 @@ const shutdown = event => () => {
   process.exit(0);
 };
 
-database.connect(conf.get('MONGO_URL'), (err) => {
+const MONGO_URL = process.env.MONGO_URL ? process.env.MONGO_URL : conf.get('MONGO_URL');
+const PORT = process.env.PORT ? process.env.PORT : conf.get('PORT');
+
+database.connect(MONGO_URL, (err) => {
   if (err) {
     debug(chalk.red('Shutdown the application because an error occurred when connecting to database'));
     process.exit(1);
@@ -29,7 +32,7 @@ process
     debug(chalk.red(`Node process exit with code: ${code}`));
   });
 
-const app = server.listen(conf.get('PORT'), (err) => {
+const app = server.listen(PORT, (err) => {
   if (err) {
     debug(chalk.red(`Error on listen port. ${err.message}`));
   }
